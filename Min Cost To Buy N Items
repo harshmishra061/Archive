@@ -1,0 +1,38 @@
+Recursive Approach ->
+#include <bits/stdc++.h>
+int minCostToReachN(int curr, int n, int a, int b, vector<int>& mp) {
+    if(curr == n) return 0;
+
+    if(mp[curr] != -1) return mp[curr];
+    
+    int cost = a + minCostToReachN(curr + 1, n, a, b, mp);
+
+    if(2 * curr <= n) {
+        cost = min(cost, b + minCostToReachN(2 * curr, n, a, b, mp));
+    }
+    
+    return mp[curr] = cost;
+}
+
+
+int minCostToBuyN(int n, int a, int b)
+{
+    vector<int> mp(n + 1, -1);
+    if(n == 1) return a;
+    return a + minCostToReachN(1, n, a, b, mp);
+}
+
+// Iterative Approach
+#include <bits/stdc++.h>
+int minCostToBuyN(int n, int a, int b)
+{
+    vector<int> mp(n + 1);
+    mp[n] = 0;
+    for(int i = n - 1;i >= 0;i--) {
+        mp[i] = a + mp[i + 1];
+        if(i * 2 <= n) {
+            mp[i] = min(mp[i], b + mp[2 * i]);
+        }
+    }
+    return mp[0];
+}
