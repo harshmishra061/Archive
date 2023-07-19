@@ -1,0 +1,12 @@
+#include <bits/stdc++.h> 
+int distinctSubsequences(string S) 
+{
+    map<char, long> arr; // count of Unique subsequences ending at char ch
+    long totUnique = 1;
+    for(auto ch : S) {
+        long curr = ((totUnique - arr[ch]) % 1000000007 + 1000000007) % 1000000007; // non - repeating unique subsequence ending at char ch 
+        totUnique = (totUnique + curr) % 1000000007;
+        arr[ch] = (arr[ch] + curr) % 1000000007; // tot unique subsequences ending at char ch
+    }
+    return totUnique;
+}
