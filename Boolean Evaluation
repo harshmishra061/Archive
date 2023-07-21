@@ -1,0 +1,96 @@
+// Recursive Approach
+#include <bits/stdc++.h> 
+struct Pair {
+    int countT;
+    int countF;
+    Pair(int t, int f) {
+        countT = t;
+        countF = f;
+    }
+};
+
+vector<vector<Pair>> mp;
+int mod;
+Pair totNoOfWays(string& str, int i, int j) {
+    if(i == j) {
+        if(str[i] == 'T') return Pair(1, 0);
+        return Pair(0, 1);
+    }
+    if(mp[i][j].countT != -1) return mp[i][j];
+
+    Pair p = Pair(0, 0);
+    for(int k = i + 1;k < j;k++) {
+        if(str[k] != '|' && str[k] != '&' && str[k] != '^') continue;
+
+        Pair p1 = totNoOfWays(str, i, k - 1);
+        Pair p2 = totNoOfWays(str, k + 1, j);
+
+        if(str[k] == '|') {
+            p.countT = (p.countT + (((1LL*p1.countT * p2.countT)%mod + (1LL*p1.countT * p2.countF)%mod)%mod + (1LL*p1.countF * p2.countT)%mod)%mod)%mod;
+            p.countF = (p.countF + (1LL*p1.countF * p2.countF)%mod)%mod;
+        } else if(str[k] == '&') {
+            p.countT = (p.countT + (1LL*p1.countT * p2.countT)%mod)%mod ;
+            p.countF = (p.countF + (((1LL*p1.countT * p2.countF)%mod + (1LL*p1.countF * p2.countT)%mod)%mod + (1LL*p1.countF * p2.countF)%mod)%mod)%mod;
+        } else {
+            p.countT = (p.countT + ((1LL*p1.countT * p2.countF)%mod + (1LL*p1.countF * p2.countT)%mod)%mod)%mod;
+            p.countF = (p.countF + ((1LL*p1.countT * p2.countT)%mod + (1LL*p1.countF * p2.countF)%mod)%mod)%mod;
+        }
+    }
+
+    return mp[i][j] = p;
+}
+
+int evaluateExp(string & str) {
+    mod = 1000000007;
+    mp = vector<vector<Pair>>(str.size(), vector<Pair>(str.size(), Pair(-1, -1)));
+    return totNoOfWays(str, 0, str.size() - 1).countT;
+}
+
+
+
+//Iterative Approach
+#include <bits/stdc++.h> 
+struct Pair {
+    int countT;
+    int countF;
+    Pair() {}
+    Pair(int t, int f) {
+        countT = t;
+        countF = f;
+    }
+};
+
+int evaluateExp(string & str) {
+    int mod = 1000000007;
+    vector<vector<Pair>> mp(str.size(), vector<Pair>(str.size()));
+    //Gap Method
+    for(int g = 0;g < str.size();g++) {
+        for(int i = 0, j = g;j < str.size();i++, j++) {
+            if(g == 0) {
+                if(str[i] == 'T') mp[i][j] = Pair(1, 0);
+                if(str[i] == 'F') mp[i][j] = Pair(0, 1);
+            } else {
+                Pair p = Pair(0, 0);
+                for(int k = i + 1;k < j;k++) {
+                    if(str[k] != '|' && str[k] != '&' && str[k] != '^') continue;
+
+                    Pair p1 = mp[i][k - 1];
+                    Pair p2 = mp[k + 1][j];
+
+                    if(str[k] == '|') {
+                        p.countT = (p.countT + (((1LL*p1.countT * p2.countT)%mod + (1LL*p1.countT * p2.countF)%mod)%mod + (1LL*p1.countF * p2.countT)%mod)%mod)%mod;
+                        p.countF = (p.countF + (1LL*p1.countF * p2.countF)%mod)%mod;
+                    } else if(str[k] == '&') {
+                        p.countT = (p.countT + (1LL*p1.countT * p2.countT)%mod)%mod ;
+                        p.countF = (p.countF + (((1LL*p1.countT * p2.countF)%mod + (1LL*p1.countF * p2.countT)%mod)%mod + (1LL*p1.countF * p2.countF)%mod)%mod)%mod;
+                    } else {
+                        p.countT = (p.countT + ((1LL*p1.countT * p2.countF)%mod + (1LL*p1.countF * p2.countT)%mod)%mod)%mod;
+                        p.countF = (p.countF + ((1LL*p1.countT * p2.countT)%mod + (1LL*p1.countF * p2.countF)%mod)%mod)%mod;
+                    }
+                }
+                mp[i][j] = p;
+            }
+        }
+    }
+    return mp[0][str.size() - 1].countT;
+}
