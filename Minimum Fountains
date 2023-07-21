@@ -1,3 +1,37 @@
+#include <bits/stdc++.h> 
+int findMinFountains(vector<int> &arr, int n)
+{
+    //1. Convert the problem into interval problem.
+    vector<pair<int, int>> vec;
+    for(int i = 0;i <= n;i++) {
+        vec.push_back({max(0, i - arr[i]), min(n, i + arr[i])});
+    }    
+    //2. Now solve standard problem - minimum number of intervals required to cover number line
+    
+    vector<int> range(n + 1, 0);
+    for(auto p : vec) {
+        int currIdx = p.first;
+        int nextIdx = p.second;
+        range[currIdx] = max(range[currIdx], nextIdx);
+    }
+    // Similar to Frog Jump problem
+    int count = 1;
+    int currReach = range[0];
+    int maxReach = range[0];
+    
+    for(int i = 1; i <= currReach;i++) {
+        if(currReach == n) return count;
+        maxReach = max(range[i], maxReach);
+        if(i == currReach) {
+            count++;
+            currReach = maxReach;
+        }
+    }
+    
+    return -1;
+}
+
+// SECOND METHOD
 int findMinFountains(vector<int> &arr, int n)
 {
     vector<pair<int, int>> vec;
