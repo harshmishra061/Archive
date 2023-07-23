@@ -1,0 +1,21 @@
+#include<bits/stdc++.h>
+int maximumAreaSquare(vector<vector<int>>& arr, int n, int m)
+{
+    // Tabulation
+    int res = 0;
+    vector<vector<int>> dp(n, vector<int>(m, 0)); // dp[i][j] = maxLen of subarray containing only 1's and ending at i, j
+    for(int i = 0;i < n;i++) {
+        for(int j = 0;j < m;j++) {
+            if(i == 0 || j == 0 || arr[i][j] == 0) {
+                dp[i][j] = arr[i][j];
+            } else {
+                int top = dp[i - 1][j];
+                int left = dp[i][j - 1];
+                int tldiag = dp[i - 1][j - 1]; // top left diagonal
+                dp[i][j] = 1 + min({top, left, tldiag});
+            }
+            res = max(res, dp[i][j] * dp[i][j]);
+        }
+    }
+    return res;
+}
