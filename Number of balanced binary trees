@@ -1,0 +1,25 @@
+// Recurise Approach
+#include <bits/stdc++.h> 
+map<int, int> mp;
+int countBalancedBinaryTree( int n)
+{
+    if(n == 0 || n == 1) return 1;
+    if(mp.find(n) != mp.end()) return mp[n];
+    return mp[n] = ((1LL * countBalancedBinaryTree(n - 1) * (countBalancedBinaryTree(n - 1) + countBalancedBinaryTree(n - 2)))%1000000007 + (1LL * countBalancedBinaryTree(n - 2) * countBalancedBinaryTree(n - 1))%1000000007)%1000000007;
+}
+
+// Tabulation
+#include <bits/stdc++.h>
+int countBalancedBinaryTree( int n)
+{
+    vector<int> dp(n + 1); // dp[i] = all possible way to represent a balanced binary tree of height i
+    dp[0] = dp[1] = 1;
+
+    for(int i = 2; i <= n;i++) {
+        // if left child height is i - 1, right child height can be i - 1 or i - 2
+        // if left child height is i - 2, right child height can be i - 1 
+        dp[i] = ((1LL * dp[i - 1] * (dp[i - 1] + dp[i - 2]))%1000000007 + (1LL * dp[i - 2] * dp[i - 1]) % 1000000007) % 1000000007;
+    }
+
+    return dp[n];
+}
