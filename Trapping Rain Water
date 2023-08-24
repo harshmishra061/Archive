@@ -38,3 +38,23 @@ long long getTrappedWater(long long* arr, int n) {
     }
     return res;
 }
+
+// 3rd Approach - Stack(Next Greater on Left and Next Greater on Right)
+long long getTrappedWater(long long* arr, int n) {
+    long long res = 0;
+    stack<int> st;
+
+    for(int i = 0;i < n;i++) {
+        while(!st.empty() && arr[st.top()] <= arr[i]) {
+            int nextGtrRight = arr[i];
+            int height = arr[st.top()]; st.pop();
+            if(st.empty()) continue;
+            int nextGtrLeft = arr[st.top()];
+
+            res += 1LL * (min(nextGtrLeft, nextGtrRight) - height) * (i - st.top() - 1);
+        }
+        st.push(i);
+    }
+
+    return res;
+}
