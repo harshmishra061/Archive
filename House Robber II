@@ -1,0 +1,79 @@
+// First Method
+#include <bits/stdc++.h> 
+long long int houseRobber(vector<int>& valueInHouse)
+{
+    int n = valueInHouse.size();
+    if(n == 1) return valueInHouse[0];
+
+    long long take = valueInHouse[0], nottake = 0;
+    for(int i = 1;i < n - 1;i++) {
+        long long newtake = valueInHouse[i] + nottake;
+        long long newnottake = max(take, nottake);
+
+        take = newtake, nottake = newnottake;
+    }
+
+    long long res = max(take, nottake);
+
+    take = 0, nottake = 0;
+    for(int i = 1;i < n;i++) {
+        long long newtake = valueInHouse[i] + nottake;
+        long newnottake = max(take, nottake);
+
+        take = newtake, nottake = newnottake;
+    }
+    res = max(res, max(take, nottake));
+
+    return res;
+}
+
+
+
+
+
+
+
+
+
+
+
+// Second Method
+#include <bits/stdc++.h> 
+long long int houseRobber(vector<int>& valueInHouse)
+{
+    int n = valueInHouse.size();
+    if(n == 1) return valueInHouse[0];
+    if(n == 2) return max(valueInHouse[0], valueInHouse[1]);
+
+
+    long long secPrev = valueInHouse[0], prev = max(valueInHouse[0], valueInHouse[1]);
+    
+    for(int i = 2;i < n - 1;i++) {
+        long long take = valueInHouse[i] + secPrev;
+        long long nottake = prev;
+
+        long long curr = max(take, nottake);
+
+        secPrev = prev;
+        prev = curr;
+    }
+
+    long long res = prev;
+
+    secPrev = 0, prev = valueInHouse[1];
+    
+    for(int i = 2;i < n;i++) {
+        long long take = valueInHouse[i] + secPrev;
+        long long nottake = prev;
+
+        long long curr = max(take, nottake);
+
+        secPrev = prev;
+        prev = curr;
+    }
+    res = max(res, prev);
+
+    return res;
+
+
+}
