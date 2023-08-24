@@ -1,0 +1,45 @@
+// Recursive Approach
+#include <bits/stdc++.h> 
+vector<vector<int>> dp;
+int pathExist(int i, int j, vector<vector<int>>& maze, int n) {
+	if(i == n || j == n) return 5;
+	if(i == n - 1 && j == n - 1) return maze[i][j];
+	if(dp[i][j] != -1) return dp[i][j];
+
+	int r = pathExist(i, j + 1, maze, n);
+	int d = pathExist(i + 1, j, maze, n);
+
+	if(min(r, d) + maze[i][j] <= 1) return dp[i][j] = min(r, d) + maze[i][j];
+}
+
+
+bool mazeWithNDoorsAnd1Key(vector<vector<int>> &maze, int n)
+{
+	dp = vector<vector<int>>(n, vector<int>(n, -1));
+	return pathExist(0, 0, maze, n) <= 1;
+}
+
+
+// Tabulation
+#include <bits/stdc++.h> 
+bool mazeWithNDoorsAnd1Key(vector<vector<int>> &maze, int n)
+{
+	vector<vector<int>> dp(n, vector<int>(n));
+
+
+	for(int i = n - 1;i >= 0;i--) {
+		for(int j = n - 1;j >= 0;j--) {
+			if(i == n - 1 && j == n - 1) {
+				dp[i][j] = maze[i][j];
+			} else if(i == n - 1) {
+				dp[i][j] = dp[i][j + 1] + maze[i][j];
+			} else if(j == n - 1) {
+				dp[i][j] = dp[i + 1][j] + maze[i][j];
+			} else {
+				dp[i][j] = min(dp[i + 1][j], dp[i][j + 1]) + maze[i][j];
+			}
+		}
+	}
+
+	return dp[0][0] <= 1;
+}
