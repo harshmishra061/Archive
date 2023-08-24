@@ -1,0 +1,40 @@
+long long getTrappedWater(long long* arr, int n) {
+    vector<long long> leftMax(n);
+    
+    leftMax[0] = arr[0];
+    for(int i = 1;i < n;i++) {
+        leftMax[i] = max(arr[i], leftMax[i - 1]);
+    }
+
+    vector<long long> rightMax(n);
+    rightMax[n - 1] = arr[n - 1];
+    for(int i = n - 2;i >= 0;i--) {
+        rightMax[i] = max(arr[i], rightMax[i + 1]);
+    }
+
+    long long res = 0;
+    for(int i = 0;i < n;i++) {
+        res += min(leftMax[i], rightMax[i]) - arr[i];
+    }
+    return res;
+}
+
+
+// 2nd Approach
+long long getTrappedWater(long long* arr, int n) {
+    long long leftMax = LONG_LONG_MIN, rightMax = LONG_LONG_MIN, res = 0;
+    int i = 0, j = n - 1;
+
+    while(i <= j) {
+        if(arr[i] <= arr[j]) {
+            leftMax = max(leftMax, arr[i]);
+            res += leftMax - arr[i];
+            i++;
+        } else {
+            rightMax = max(rightMax, arr[j]);
+            res += rightMax - arr[j];
+            j--;
+        }
+    }
+    return res;
+}
