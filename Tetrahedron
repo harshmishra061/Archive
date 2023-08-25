@@ -1,0 +1,44 @@
+// Recursive Approach
+#include <bits/stdc++.h> 
+int numberOfWays2(int n, int endPoint, vector<vector<int>>& dp) {
+    if(n == 0) {
+        if(endPoint == 3) return 1;
+        return 0;
+    }    
+
+    if(dp[n][endPoint] != -1) return dp[n][endPoint];
+    
+    int count = 0;
+    for(int i = 0;i < 4;i++) {
+        if(i == endPoint) continue;
+        count = (1LL * count + numberOfWays2(n - 1, i, dp)) % 1000000007;
+    }
+    return dp[n][endPoint] = count;
+}
+
+
+
+int numberOfWays(int n)
+{
+    vector<vector<int>> dp(n + 1, vector<int>(4, -1));
+    return numberOfWays2(n, 3, dp); // return total no. of ways to reach D in n steps (starting from D)
+}
+
+
+
+// Optimized DP
+#include <bits/stdc++.h> 
+int numberOfWays(int n)
+{
+    long A = 0, B = 0, C = 0, D = 1;
+    for(int i = 1;i <= n;i++) {
+        long newA = (B + C + D) % 1000000007;
+        long newB = (A + C + D) % 1000000007;
+        long newC = (A + B + D) % 1000000007;
+        long newD = (A + B + C) % 1000000007;
+
+        A = newA, B = newB, C = newC, D = newD;
+    }
+
+    return D;
+}
