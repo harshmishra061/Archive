@@ -1,0 +1,41 @@
+// Recursive Approach
+#include <bits/stdc++.h> 
+map<int, int> mp;
+int countStepsToOne(int n) {
+	if(n == 1) return 0;
+	if(mp.find(n) != mp.end()) return mp[n]; 
+
+	int option = countStepsToOne(n - 1) + 1;
+	
+	if(n % 2 == 0) {
+		option = min(option, countStepsToOne(n / 2) + 1);
+	}
+	
+	if(n % 3 == 0) {
+		option = min(option, countStepsToOne(n / 3) + 1);
+	}
+
+	return mp[n] = option;
+}
+
+
+// Tabulation
+#include <bits/stdc++.h> 
+int countStepsToOne(int n) {
+	vector<int> dp(n + 1);
+
+	dp[1] = 0;
+	for(int i = 2;i <= n;i++) {
+		dp[i] = dp[i - 1] + 1; // option1 = subtraction
+		
+		if(i % 2 == 0) { // option2 = div2
+			dp[i] = min(dp[i], dp[i/2] + 1);
+		}
+
+		if(i % 3 == 0) { // option3 = div3
+			dp[i] = min(dp[i], dp[i/3] + 1);
+		}
+	}
+	
+	return dp[n];
+}
