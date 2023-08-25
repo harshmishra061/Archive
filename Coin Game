@@ -1,0 +1,49 @@
+// Recursive Method
+#include <bits/stdc++.h> 
+int maxCoins2(vector<int>& coins, int i, int j, vector<vector<int>>& dp) {
+    if(i > j) return 0;
+
+    if(dp[i][j] != -1) return dp[i][j];
+    // option 1 -> choose the ith ele
+    int op1 = coins[i] + min(maxCoins2(coins, i + 2, j, dp), maxCoins2(coins, i + 1,j - 1, dp));
+
+    // option 2 -> choose the jth ele
+    int op2 = coins[j] + min(maxCoins2(coins, i + 1, j - 1, dp), maxCoins2(coins, i, j - 2, dp));
+
+    return dp[i][j] = max(op1, op2);
+}
+
+
+int maxCoins(vector<int> coins, int n)
+{
+    vector<vector<int>> dp(n, vector<int>(n, -1));
+    return maxCoins2(coins, 0, n - 1, dp);
+}
+
+
+// Tabulation Method
+#include <bits/stdc++.h> 
+int maxCoins(vector<int> coins, int n)
+{
+    vector<vector<int>> dp(n, vector<int>(n, -1));
+
+    for(int g = 0;g < n;g++) {
+        for(int i = 0, j = g;j < n;i++, j++) {
+            if(g == 0) {
+                dp[i][j] = coins[i];
+            } else if(g == 1) {
+                dp[i][j] = max(coins[i], coins[j]);
+            } else {
+                // option 1 -> choose the ith ele
+                int op1 = coins[i] + min(dp[i + 2][j], dp[i + 1][j - 1]);
+
+                // option2 -> choose the jth ele
+                int op2 = coins[j] + min(dp[i][j - 2], dp[i + 1][j - 1]);
+
+                dp[i][j] = max(op1, op2);
+            }
+        }
+    }
+
+    return dp[0][n - 1];
+}
