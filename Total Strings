@@ -1,3 +1,28 @@
+//Recursive Approach
+long countStrings2(int len, int bCount, int cCount, int n, vector<vector<vector<int>>>& dp) {
+    if(bCount > 1 || cCount > 2) return 0;
+    
+    if(len == n) return 1;
+
+    if(dp[len][bCount][cCount] != -1) return dp[len][bCount][cCount];
+
+    long count = 0;
+
+    count = (count + countStrings2(len + 1, bCount, cCount, n, dp)) % 1000000007;
+    count = (count + countStrings2(len + 1, bCount + 1, cCount, n, dp)) % 1000000007;
+    count = (count + countStrings2(len + 1, bCount, cCount + 1, n, dp)) % 1000000007;
+
+    return dp[len][bCount][cCount] = count;
+}
+
+int countStrings(long n)
+{
+    vector<vector<vector<int>>> dp(n, vector<vector<int>>(2, vector<int>(3, -1)));
+    return countStrings2(0, 0, 0, n, dp);
+}
+
+
+// Mathematical Approach
 int countStrings(long n)
 {
     long res = 1;
