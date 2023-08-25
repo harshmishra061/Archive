@@ -1,0 +1,9 @@
+int countStrings(long n)
+{
+    long res = 1;
+    res = (res + n * 2) % 1000000007;
+    res = (res + n * (n - 1)) % 1000000007;
+    res = (res + (n * (n - 1)) / 2) % 1000000007;
+    res = (res + (n * (n - 1) * (n - 2)) / 2) % 1000000007;
+    return res;
+}
