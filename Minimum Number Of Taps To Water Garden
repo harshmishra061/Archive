@@ -1,0 +1,26 @@
+int minimumTapsToFillGarden(vector<int> &ranges, int n) 
+{
+    vector<int> jumps(n + 1, 0);
+    for(int i = 0;i <= n;i++) {
+        int stPoint = max(0, i - ranges[i]);
+        int edPoint = min(n, i + ranges[i]);
+
+        jumps[stPoint] = max(jumps[stPoint], edPoint);
+    }
+
+
+    int cMax = jumps[0], oMax = jumps[0], count = 1;
+
+    for(int i = 1;i <= cMax;i++) {
+        if(cMax == n) return count;
+        
+        oMax = max(oMax, jumps[i]);
+
+        if(i == cMax) {
+            count++;
+            cMax = oMax;
+        }
+    }
+
+    return -1;
+}
