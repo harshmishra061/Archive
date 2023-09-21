@@ -1,0 +1,22 @@
+#include <bits/stdc++.h>
+vector<vector<int>> dp;
+int optimalStrategyOfGame2(vector<int>& coins, int i, int j) {
+    if(i > j) return 0;
+
+    if(dp[i][j] != -1) return dp[i][j];
+    
+    // choose ith coin
+    int m1 = coins[i] + min(optimalStrategyOfGame2(coins, i + 2, j), optimalStrategyOfGame2(coins, i + 1, j - 1));
+    // choose jth coin
+    int m2 = coins[j] + min(optimalStrategyOfGame2(coins, i + 1, j - 1), optimalStrategyOfGame2(coins, i, j - 2));
+
+    return dp[i][j] = max(m1, m2);
+    
+}
+
+
+int optimalStrategyOfGame(vector<int> coins, int n)
+{
+    dp = vector<vector<int>>(n, vector<int>(n, -1));
+    return optimalStrategyOfGame2(coins, 0, n - 1);
+}
